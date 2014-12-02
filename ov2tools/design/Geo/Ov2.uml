@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_OlKc8W0xEdyI1KFHHfYisg" name="">
+  <packagedElement xmi:type="uml:Package" xmi:id="_hYR9sG0xEdyI1KFHHfYisg" name="IO">
+    <packagedElement xmi:type="uml:Class" xmi:id="_B0jUYG01EdyI1KFHHfYisg" name="Handle" clientDependency="_CzSNgG01EdyI1KFHHfYisg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="__fPp4G00EdyI1KFHHfYisg" name="Geo">
+    <packagedElement xmi:type="uml:Class" xmi:id="_A6vXgG01EdyI1KFHHfYisg" name="Ov2">
+      <ownedOperation xmi:id="_1DQWsG01EdyI1KFHHfYisg" name="read">
+        <ownedParameter xmi:id="_16F4EG01EdyI1KFHHfYisg" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_3r8QMG01EdyI1KFHHfYisg" name="readline">
+        <ownedParameter xmi:id="_4eThQG01EdyI1KFHHfYisg" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_Bl1GcG02EdyI1KFHHfYisg" name="sysread">
+        <ownedParameter xmi:id="_CgGWUG02EdyI1KFHHfYisg" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_DF81YG02EdyI1KFHHfYisg" name="syswrite">
+        <ownedParameter xmi:id="_DyzUUG02EdyI1KFHHfYisg" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_FernUG02EdyI1KFHHfYisg" name="print">
+        <ownedParameter xmi:id="_GEiGYG02EdyI1KFHHfYisg" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_HV5AkG02EdyI1KFHHfYisg" name="readline">
+        <ownedParameter xmi:id="_H8o3gG02EdyI1KFHHfYisg" direction="return"/>
+      </ownedOperation>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Realization" xmi:id="_CzSNgG01EdyI1KFHHfYisg" name="Extends" supplier="_A6vXgG01EdyI1KFHHfYisg" client="_B0jUYG01EdyI1KFHHfYisg"/>
+</uml:Package>

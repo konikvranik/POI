@@ -1,0 +1,9 @@
+#!/bin/sh
+
+[ -z "$1" ] && prefix=/mnt/usb || prefix="$1"
+mapdir=PL_CZ_HU_SK_plus_major_roads_of_WE-Map-652
+src=/home/public/POI/todevice
+#cp -up "$src"/*.ov2 "$src/poi.dat" "$prefix/$mapdir/"
+mount "$prefix"
+rsync --update --times --whole-file --cvs-exclude --dirs --verbose --delete --inplace --filter="risk *.ov2" --filter="risk *.bmp" --filter="risk poi.dat" --filter="protect *" "$src/" "$prefix/$mapdir/"
+umount "$prefix"

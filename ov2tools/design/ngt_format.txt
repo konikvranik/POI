@@ -1,0 +1,5 @@
+ngt A the continuation, s?r?par of 
+iseparator:|
+fields: Longitude/180|Latitude/180|Speed (km/h)|Altitude (m)|Cape|Dividing|Signal (internal value, can l.ignorer, or to put 1)|Statute (1st bit: D?t of a rupture, 2nd bit: end of a rupture)|Color (a number in 0 and 20, to add 256 if milked?is)|Date of the fix (in day since January 1 2000).
+Time D?lage. I 
+point out qu.il is possible d.exporter with the format text.

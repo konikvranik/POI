@@ -1,0 +1,14 @@
+Implementace rozhrani IO::Handle
+
+
+pretizeni:
+sysread
+syswrite
+print
+read
+readline
+
+
+disable:
+getc
+putc?

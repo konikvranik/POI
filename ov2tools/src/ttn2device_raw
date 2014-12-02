@@ -1,0 +1,214 @@
+#!/usr/bin/env perl
+
+use POSIX;
+use locale;
+use Data::Dumper;
+use Getopt::Long;
+use Locale::TextDomain 'net.suteren.POI.todevice', '/usr/share/locale/', '/usr/local/share/locale/';
+use Pod::Text::Termcap;
+use Pod::Usage;
+use Config::General;
+use File::Basename;
+use GPS::Poi;
+use File::Copy;
+
+
+=head1 NAME
+
+{progname} - Displays time to mountpoint capacity exceed.
+
+=head1 SYNOPSIS
+
+{progname} [--hour|-ho] [--minute|-m] [--day|-d] [--human-readable|-hu] [--kilo|-k] [--mega|-m] [--alert=N|-a N] mountpoint [mountpoint [mountpoint]]...
+
+{progname} --help|-h
+
+
+=head1 DESCRIPTION
+
+{progname} displays aproximate time to fullfill specified mountpoints. For approximation is used simple linear iterpolation by X<Partial Least Squares>.
+
+=head1 OPTIONS
+
+=over
+
+=item --help|-he
+
+Display this help message.
+
+=item --hour|-ho
+
+All time units on input and output are considered as hours.
+
+=item --minute|-mi
+
+All time units on input and output are considered as minutes.
+
+=item --day|-d
+
+All time units on input and output are considered as days.
+
+=item --human-readable|-hu
+
+Output is provided in human readable format.
+
+In other cases is outpus displayed in columns without units and explanation for better processing by other piped commands.
+
+=item --kilo|-k
+
+All capacity units on input and output are considered as kiB.
+
+=item --mega|-me
+
+All capacity units on input and output are considered as MiB.
+
+=item --alert=N|-a N
+
+If capacity will be exceeded in time shorter than N in selected timeunits, command will exit with exit status 1 and with corresponding line will be displayed warning.
+
+=back
+
+I<Default time units are seconds.>
+
+I<Default capacity units are bytes.>
+
+config: {configfile}
+
+=head1 SEE ALSO
+
+L<Pod::Usage>, L<pod2usage(1)>
+
+=head1 BUGS
+
+=over
+=item
+Translation of help message is dependent on pod2usage implementation. If help message is not displayed in expected language, you can check net.suteren.dfincrease.monitor.po for corresponding message
+=back
+
+=cut
+
+
+my $helptext;
+
+sub printhelp {
+	pipe Reader, Writer;
+	pod2usage( -exitval => NOEXIT, -output => \*Writer );
+	close Writer;
+	$message = "";
+	while ( <Reader> ) {
+		$message .=  __$_;
+	}
+	close Reader;
+	print __x($message, progname => basename( $0 ), configfile => $configfile );
+}
+
+my $help;
+$configfile;
+$bufflen = 64*8*1024;
+@configfiles = ( "catgroup.conf", "catgroup.cfg", "catgroup_rc", "catgroup" );
+@configdirs = ( "./", "./etc/", "../etc/", "/etc/", "/etc/POI/", "/etc/POIs/", "/etc/local/POI/", "/usr/local/etc/POI/" );
+
+outer:
+foreach $i ( @configdirs ) {
+	foreach $j ( @configfiles ) {
+		if ( -f "$i$j" && -r "$i$j" ) {
+			$configfile = "$i$j";
+			last outer;
+		}
+	}
+}
+
+printf "config: %s\n", $configfile;
+
+unless ( GetOptions ( "help" => \$help, "configfile" => \$configfile ) ) {
+	&printhelp();
+	die __"Bad options.";
+}
+
+if ( $help ) {
+	&printhelp();
+	exit 0;
+}
+
+my $srcDir = shift;
+my $destDir = shift;
+
+$conf = new Config::General( -ConfigFile => $configfile, -InterPolateVars => 1);
+my %conf = $conf->getall();
+$srcDir = $conf{_DEFAULT_}{srcDir} unless $srcDir;
+$destDir = $conf{_DEFAULT_}{destDir} unless $destDir;
+
+$srcDir = "$srcDir/" if substr ( $srcDir, length ( $srcDir ) - 1 ) ne "/";
+$destDir = "$destDir/" if substr ( $destDir, length ( $destDir ) - 1 ) ne "/";
+
+my %conf_categories = %{$conf{category}};
+
+my %poidat;
+
+foreach $category ( keys %conf_categories ){
+	printf "cat: %s\n", $category;
+	my %category = %{$conf_categories{$category}};
+	my $id = $conf_categories{$category}{id};
+	chomp $category;
+	chomp $id;
+	$poidat{$id}=$category if $id;
+	open OUTCAT, ">$destDir/$category";
+	my @files = @{$conf_categories{$category}{filename}};
+	@files = $conf_categories{$category}{filename} unless @files;
+	my $ts=0;
+	foreach my $file (@files) {
+		chomp $file;
+		my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat("$srcDir/$file");
+		$ts = $mtime if $mtime > $ts;
+		open FROMCAT, "<$srcDir/$file";
+		while ( read FROMCAT, my $buff, $bufflen) {
+			print OUTCAT $buff;
+		}
+		close FROMCAT;
+		printf "src: %s\n", $file;
+	}
+	close OUTCAT;
+	utime $ts, $ts, "$destDir/$category";
+
+	my $iconfile = $conf_categories{$category}{icon};
+	$catname = fileparse( $category, ".ov2" );
+	$iconfile = "$srcDir/$catname.bmp" unless $iconfile;
+	my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat("$iconfile");
+	copy("$iconfile","$destDir/$catname.bmp");
+	utime $atime, $mtime, "$destDir/$catname.bmp";
+}
+
+my $ts=0;
+
+my @catids = keys %poidat;
+my @offsets;
+my $headermask = "V" . ( "V" x ( $#catids + 1 ) ) . ( "V" x ( $#catids+2) );
+my $header = pack $headermask, ($#catids + 1, @catids, @catids, 0 ) ;
+my $bytecounter= length ( $headermask ) * 4;
+open POIDAT, ">$destDir/poi.dat";
+
+print POIDAT $header;
+
+foreach my $id (@catids) {
+	my $filename=$poidat{$id};
+	printf "%s=%s\n", $id, $poidat{$id};
+	my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat("$destDir/$filename");
+	$ts = $mtime if $mtime > $ts;
+	open FROMCAT, "<$destDir/$filename";
+	push @offsets, $bytecounter;
+	while ( my $bytescount = read FROMCAT, my $buff, $size ) {
+		print POIDAT $buff;
+		$bcount = $bytescount;
+		$blen = length $buff;
+	}
+	close FROMCAT;
+	unlink "$destDir/$filename";
+	$bytecounter += $size;
+}
+
+push @offsets, $bytecounter - 1;
+$header = pack $headermask, ($#catids + 1, @catids, @offsets );
+seek POIDAT, 0, 0;
+print POIDAT $header;
+close POIDAT;
+utime $ts, $ts, "$destDir/poi.dat";

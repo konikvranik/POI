@@ -1,0 +1,18 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2007 Petr Vraník
+# This file is distributed under the same license as the dfincerase.monitor package.
+# Petr Vvraník <hpa@suteren.net>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: dfincerase.monitor 1.0\n"
+"Report-Msgid-Bugs-To: hpa@suteren.net\n"
+"POT-Creation-Date: 2007-08-17 22:22+0200\n"
+"PO-Revision-Date: 2007-08-18 13:09+0100\n"
+"Last-Translator: Petr Vraník <hpa@suteren.net>\n"
+"Language-Team: Petr Vvraník <hpa@suteren.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n>=2 && n<=4 ? 1 : 2;\n"
+
