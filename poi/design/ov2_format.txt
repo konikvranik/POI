@@ -1,0 +1,51 @@
+An OV2 file consists of a sequence of variable−length records. Every
+record starts with a one−byte
+"type". This type tells you how to process the rest of the record.
+You should not encounter types other than 0, 1, 2 and 3 − if you do, the
+file is either corrupt or in a
+different (e.g. a higher−version) format.
+Coordinates are stored as 4−byte integers representing a WGS84 longitude
+or latitude, multiplied by
+100,000 and rounded to the nearest integer. As such, an X−coordinate
+should always be a value between
+−18,000,000 and +18,000,000, and a Y−coordinate should be a value
+between −9,000,000 and +9,000,000.
+DELETED RECORD:
+1 byte T: type (always 0)
+2. Providing your own Points of Interest to TomTom Navigator
+7
+4 bytes L: length of this record in bytes (including the T and L fields)
+L−5 bytes bytes to ignore (content undefined)
+SKIPPER RECORD:
+1 byte T: type (always 1)
+4 bytes Number of bytes in the file, including and starting at this
+record, that contain data for POI enclosed in the given
+rectangle
+4 bytes X1: longitude coordinate of the west edge of the rectangle
+4 bytes Y1: latitude coordinate of the south edge of the rectangle
+4 bytes X2: longitude coordinate of the east edge of the rectangle
+4 bytes Y2: latitude coordinate of the north edge of the rectangle
+SIMPLE POI RECORD:
+1 byte T: type (always 2)
+4 bytes L: length of this record in bytes (including the T and L fields)
+4 bytes X: longitude coordinate of the POI
+4 bytes Y: latitude coordinate of the POI
+L−13 bytes Name: zero−terminated ASCII string specifying the name
+of the POI
+EXTENDED POI RECORD:
+1 byte T: type (always 3)
+4 bytes L: length of this record in bytes (including the T and L fields)
+4 bytes X: longitude coordinate of the POI
+4 bytes Y: latitude coordinate of the POI
+P bytes Name: zero−terminated ASCII string specifying the name
+of the POI
+Q bytes Unique ID: zero−terminated string specifying the unique ID
+of the POI
+L−P−Q−13 bytes Extra data: zero−terminated string, not used yet
+If you encounter any other type, either the file is corrupt, or the file
+contains extra (proprietary) records.
+In either case, you should stop processing immediately. Since there is
+always the danger that the file is
+corrupt, you should in fact wonder whether the preceding records read so
+far were in fact valid.
+

@@ -1,0 +1,13 @@
+# Index created by AutoSplit for lib/Text/CSV/International.pm
+#    (file acts as timestamp)
+package Text::CSV::International;
+sub version  ;
+sub new  ;
+sub status  ;
+sub error_input  ;
+sub string  ;
+sub fields  ;
+sub combine  ;
+sub parse  ;
+sub _bite  ;
+1;

@@ -1,0 +1,774 @@
+<html>
+
+<!-- Mirrored from www.licour.com/gps/poi_format/poi_file_format.htm by HTTrack Website Copier/3.x [XR&CO'2005], Fri, 23 Dec 2005 10:26:20 GMT -->
+<head>
+<META NAME="GENERATOR" CONTENT="Notepad ;-)">
+<meta name="Keywords" content="extract_ttpoi, licour, laurent licour, gps, tomtom, poi, pois, navigator, extract, decode, decoder, poi.dat, file, format, description, analyse">
+<title>Bienvenue sur la page de Laurent Licour - File description of Tomtom file POI.dat</title>
+</head>
+<body>
+<H1>Tomtom Navigator POI.DAT File description</H1>
+<P> 
+This page is about a description of the file POI.dat used by Tomtom Navigator (v2, v3 and v5) to store theirs POIs.
+<P>
+<B>Important : POIs from Tomtom Navigator are copyrighted and you CAN'T used the informations in this page to exploit-modify-diffuse natives POIs or do anything that Tomtom licence prohibit.</B>
+<BR>
+However, it seems that licence permit to replace native POI.DAT with yout own file, based on private or free datas.
+<P>
+	
+<I>Note that if you think that this page is written in a strange english language, don't hesitate to correct it</I>
+
+<P>
+I wrote a perl software (<a href="../extract_ttpoi/extract_ttpoi.html">extract_ttpoi.pl</a>) that implement these informations.
+
+<P>
+<H2>General structure</H2>
+A POI is a simple association of 3 datas :
+<ul>
+	<li>a longitude</li>
+	<li>a latitude</li>
+	<li>a description. With Tomtom 5 come optional Phone Number. This field is include in the description, using ">" as a separator (ex : "My favorite POI>+33-1-2345789")</li>
+</ul>
+	
+Tomtom organize their POIs in categories. There are about 60-70 differents categories (Restaurants, Petrol Station, Parking...) that are hard-coded in the Tomtom navigator program (poitypes.??.dll in Tomtom Navigator 3). See <a href="#AnnexeA">Annexe A</a> for a complete listing of categories.
+<BR>
+Each category is encoded as :
+<ul>
+	<li>a category ID : an uniq integer thar refer to the category</li>
+	<li>a category descritpion : un simple string, depending og the language. This description is different in each language ddl file</li>
+</ul>
+So the number and the list of categories are fixed, unless the dll file is modified.	
+<P>
+<I>The following description consider an integer as 4 bytes. Also, the file is encoded as little-endian</I>
+<P>
+The POI.DAT file is composed of several section :
+<P>
+<table border=1>
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+	<TR><TD>4 bytes</TD><TD>N : the number of categories in the file as an integer</TD></TR>
+	<TR><TD>N*4 bytes</TD><TD>a table of N integer that contains the category ID (see <a href="#AnnexeA">Annexe A</a>)</TD></TR>
+	<TR><TD>(N+1)*4 bytes</TD><TD>a table of N integer that contains the offset in this file of the begining of the POIs for the category. There is one more integer because of the offset of the end of block of the last category.<BR>So the the offsets of the category of index M can be computed as (C code) :<BR>
+	<UL><li>first offset = table[M]</li>
+	<li>last offset = table[M+1] - 1</li></UL></TD></TR>
+	<TR><TD>? bytes</TD><TD>N blocks of ? bytes for the POIs themself</TD></TR>
+</table>
+
+<P>
+
+We are now able to identify each block of data that contains POIs. POIs are compressed, but not encrypted. However, the originals POIs are copyright, as explain the licence of the product. So please refer to this licence before exploit the datas.
+
+<P>
+The reason why POIs are compressed is to save memory. There is also a special encoding that let Tomtom to fast search a POI according to the GPS position.
+<BR>
+The block of data is composed of records. Each record will be describe after. New Records could be added by Tomtom with futures release (ex : records 0x0C in Tomtom Navigator 5).
+<P>
+There is 2 kinds of record :
+<UL>
+  <LI>Area Record : they divides the map in little squares. This kind of record contains other records (area record or POIs records. For now, there is a uniq Area Record type (0x01)</LI>
+<LI>POIs Record : they contain a POI, as describe bellow. There is multiple methods used by Tomtom to compress (or not) the description. There is as many POI record types as encoding method</LI>
+</UL>
+
+<H2>Aera Records</H2>
+
+The logic of Area Record is to divide the complete map (we say level 0) in more little square (level 1), each level 1's square is divide in more litle square (level 2) and so on. There is many sub level. The last Area Record contains several POI Records, but no more that 10 (this seems to be a rule).
+Also, the way the areas are cut is not fixed. Each Area record as a specific size, depending of the POI density in the Area.
+<BR>
+I think that the way Area Record are created is to obtain a good repartiton of POIs. When you want to display POI in your Tomtom Navigator, only a part of them are display : the POIs that are not so far of your position. I think that Tomtom display POIs that are in the same square you are, and perhaps POIs of adjacent-square. So, the software have only a little number of POIs to analyse, saving a lot of CPU. However, I don't really know what is the exact algorithm.
+	
+<P>
+Here is an exemple of Record structure :
+<PRE>
+ Record 01                  (compelete map)    1835757 km²
+  Record 01                 (level 1)           931185 km²
+   Record 01                (level 2)           629400 km²
+    Record 01               (level 3)           440059 km²
+     Record 01              (level 4)           305839 km²
+      Record 01             (level 5)           262615 km²
+       Record 01            (level 6)           191422 km²
+        Record 01           (level 7)           167841 km²
+         Record 01          (level 8)           112220 km²
+          Record 01         (level 9)           101074 km²
+           Record 01        (level 10)           97175 km²
+            Record 12
+            ...
+            Record 12
+           Record 01        (level 10)            3899 km²
+            Record 12
+            ...
+            Record 12
+          Record 01         (level 9)            11187 km²
+           Record 01        (level 10)           10958 km²
+            Record 12
+            ...
+</PRE>
+<P>
+This graph shows an example of map divisions :
+<BR>
+<IMG src="square.jpg" />
+<P>
+	
+<H2>POI Records</H2>
+	 
+There is multiple POI record, each one implementing a specific compession method. I suppose that the goal of this structure is to store a maximum of POI in a little piece of memory. So, an optimized POI.DAT generator have to test each of the Record algorithm to find the one which consume a minumum of memory.
+<BR>
+Also, some algorithm can't encode all characters (ex : Record 12 can't encode letter Q). So a POI.DAT generator have to eliminate some Records algorithm depending of the text description.
+<BR>
+A simple POI.DAT generator could simply implement one Record algorithm : the Reocrd 07 that simply implement plain test description, (as OV2 files). This generator of course will generate large size file POI.DAT, and then consume more memory in your PDA.
+	
+            
+
+<H3>Record 01</H3>
+This Record is an Area Record. His goal is to determine a square.
+<BR>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x01</TD><TD>The Record Type</TD></TR>
+	<TR><TD>4 bytes</TD><TD>N : the total size of this record (including the 21 bytes header)</TD></TR>
+	<TR><TD>4 bytes</TD><TD>Longitude 1 (in decimal degrees). This value has to be divide by 100000</TD></TR>
+	<TR><TD>4 bytes</TD><TD>Latitude 1 (in decimal degrees). This value has to be divide by 100000</TD></TR>
+	<TR><TD>4 bytes</TD><TD>Longitude 2 (in decimal degrees). This value has to be divide by 100000</TD></TR>
+	<TR><TD>4 bytes</TD><TD>Latitude 2 (in decimal degrees). This value has to be divide by 100000</TD></TR>
+	<TR><TD>N bytes</TD><TD>Block of datas containing other records</TD></TR>
+</table>
+
+<H3>Record 02 & 15</H3>
+This Record is a POI Record. This record is used in .OV2 file. It is a plain text record
+<BR>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x02</TD><TD>The Record Type</TD></TR>
+	<TR><TD>4 bytes</TD><TD>N : the total size of this record (including the 02 bytes header)</TD></TR>
+	<TR><TD>4 bytes</TD><TD>Longitude (in decimal degrees). This value has to be divide by 100000</TD></TR>
+	<TR><TD>4 bytes</TD><TD>Latitude (in decimal degrees). This value has to be divide by 100000</TD></TR>
+	<TR><TD>N bytes</TD><TD>Clear text POI description</TD></TR>
+</table>
+
+
+<H3>Record 04 & 20</H3>
+This Record is an POI Record. There is no POI description isn't compressed. It is plain text.
+<BR>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x04</TD><TD>The Record Type</TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Longitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Latitude</a></TD></TR>
+</table>
+
+
+<H3>Record 05 & 21</H3>
+This Record is an POI Record. The POI description is a short numeric value.
+<BR>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x05 or 0x15</TD><TD>The Record Type</TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Longitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Latitude</a></TD></TR>
+	<TR><TD>2 bytes</TD><TD>unsigned 16 bits numeric value (little endian)</TD></TR>
+</table>
+
+
+<H3>Record 06 & 22</H3>
+This Record is an POI Record. The POI description is a long numeric value.
+<BR>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x06</TD><TD>The Record Type</TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Longitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Latitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD>unsigned 24 bits numeric value (little endian)</TD></TR>
+</table>
+
+
+<H3>Record 07 & 23</H3>
+This Record is an POI Record. The POI description isn't compressed. It is plain text.
+<BR>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x07</TD><TD>The Record Type</TD></TR>
+	<TR><TD>1 bytes</TD><TD>N : the size of this record, minus 8 (the size of the fixed part of the record)</TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Longitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Latitude</a></TD></TR>
+	<TR><TD>N bytes</TD><TD>Clear text POI description</TD></TR>
+</table>
+
+
+<H3>Record 08 & 24</H3>
+This Record is an POI Record. The POI description is compressed (compression type 08)
+<BR>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x08 or 0x18</TD><TD>The Record Type</TD></TR>
+	<TR><TD>1 bytes</TD><TD>N : the size of this record, minus 8 (the size of the fixed part of the record)</TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Longitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Latitude</a></TD></TR>
+	<TR><TD>N bytes</TD><TD>encoded POI description</TD></TR>
+</table>
+<P>
+The compressed method is the following :
+<P>
+<ul>
+	<li><b>if (next byte & 0x80) == 0</b>
+	<br>The next 2 bytes can be decompressed in 3 letters, each letter encoded on 5 bits (1 + 3*5 = 2 bytes)<br>
+	These 5 bits (32 values) must be transposed in letter (see <a href="#AnnexeB">Annexe B</a> for transposition table)<P>
+	ex : these 2 bytes (binary format) present 3 characters : 0AAAAABB BBBCCCCC</li>
+
+	<li><b>if (next byte & 0x80) == 0x80</b>
+<br>The next byte encode one character, with a transcription of the first quartet (4 high bits) (see <a href="#AnnexeC">Annexe C</a> for transposition table)<br>The second quartet is remain unchange</li>
+</ul>
+
+
+<H3>Record 09 & 25</H3>
+This Record is an POI Record. The POI description is compressed (compression type 09)
+<P>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x09 or 0x19</TD><TD>The Record Type</TD></TR>
+	<TR><TD>1 bytes</TD><TD>N : the size of this record, minus 8 (the size of the fixed part of the record)</TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Longitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Latitude</a></TD></TR>
+	<TR><TD>N bytes</TD><TD>encoded POI description</TD></TR>
+</table>
+
+The compressed method is the following :
+<P>
+Each character of the POI description consume a variable number a bits, using a transposition table (see <a href="#AnnexeD">Annexe D</a> for the transposition table). This seems to be a b-tree (binary tree). The Build of this table is made using frenquence letters analyze, so that "a", "e", "i" comsume more bits than "Q", "X", "Z".
+<P>
+The block of data has to be used as a serie of bits. There is a special sequence of bit that have a special meaning (End of String).
+<BR>
+The way the bits are arranged in the block is a little special : each byte must reverse the position of his bits as the following :
+<BR>
+The byte (binary format) 0bABCDEFGH will be transform in 0bHGFEDCBA
+<BR>
+So 0b10010010 will be transform in 0b01001001
+<P>
+Then, the data can be decoded, using the transpotion table.
+<BR>
+For example
+<PRE>
+starting with the bytes : 0x68 0x78 0x3c 0xb2 0x01
+This can be transform in binary : 01101000 01111000 00111100 10010010 00000001
+and then revert                 : 00010110 00011110 00111100 01001101 10000000
+and then, using b-tree table    : 00010 1100 0011 1100 0111 1000 1001 1011 (0000000)
+and then                        : station
+</PRE>
+
+
+<H3>Record 10 & 26</H3>
+This Record is an POI Record. The POI description is compressed (compression type 10)
+<P>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x0A or 0x1A</TD><TD>The Record Type</TD></TR>
+	<TR><TD>1 bytes</TD><TD>N : the size of this record, minus 8 (the size of the fixed part of the record)</TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Longitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Latitude</a></TD></TR>
+	<TR><TD>N bytes</TD><TD>encoded POI description</TD></TR>
+</table>
+<P>
+The compressed method is the following :
+<P>
+Each pairs of 2 bytes (little endian encoding) can be decompressed in 3 character. The optional last byte give one character.
+<BR>
+The characters can be obtained by calculate the modulus-40 three times on the 2 bytes, and 1 time on the 1 byte. This give 3 indexes on a transposition table :
+<P>
+	<PRE>
+&nbsp;&nbsp;abcdefghijklmnopqrstuvwxyz0123456789 .-
+</PRE>
+<P>
+if modulus is 0, this is consider as the end of string.
+<P>
+For example
+<PRE>
+starting with the bytes : 0x59 0x20, this give the value 0x2059 (8281)
+get the modulus 1 : 8281 % 40 = 1           : A
+get the modulus 2 : (8281/40) % 40 = 7      : G
+get the modulus 3 : ((8281/40)/40) % 40 = 5 : E
+</PRE>
+<P>
+<I>Note : Thanks to "Didier71" for his work</I>
+<P>
+
+
+<H3>Record 12 & 28</H3>
+This Record is an POI Record. The POI description is compressed (compression type 12)
+<P>
+The Format is the following :
+<P>
+<table border="1">
+	<TR><TD width=110>Bytes</TD><TD>Description</TD></TR>
+  <TR><TD>1 byte = 0x0C</TD><TD>The Record Type</TD></TR>
+	<TR><TD>1 bytes</TD><TD>N : the size of this record, minus 8 (the size of the fixed part of the record)</TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Longitude</a></TD></TR>
+	<TR><TD>3 bytes</TD><TD><a href="#EncodedCoord">Encoded Latitude</a></TD></TR>
+	<TR><TD>N bytes</TD><TD>encoded POI description</TD></TR>
+</table>
+<P>
+This Record is a new record from TomTom v5.
+<P>
+These records have 2 blocks of data
+<ul>
+	<li>Text Block that contain the POI description (alphabetic characters). These characters are coded on 5 bits</li>
+	<li>Phone number (numeric characters). These characters are coded on 4 bits</li>
+</ul>
+<P>
+Each block have a special 5-bit code that is an end of string. After this code, the 2nd block directly begin, until the special 4-bit code that is the end of the phone number.
+<P>
+The way the bits are arranged in the block is a little special : the coded string data have to be first reverse. Then, the group of 5 bits (and then 4 bits) have to be parse from the end of the reversed data, as the following :
+<BR>
+The bytes (binary format) 0bABCDEFGH 0bIJKLMNOP 0bQRSTUVWX will be reversed in 0bQRSTUVWX 0bIJKLMNOP 0bABCDEFGH, and the the groups of 5-bits will be (QRST) UVWXI JKLMN OPABC DEFGH
+<BR>
+<P>
+Then, the data can be decoded, using the transpotion table, and the resulting clear text have to be reverse.
+<P>	
+For example
+<PRE>
+starting with the bytes : 0x51 0x02 0x89 0x5c 0xd3 0x21 0x03
+This can be transform in binary : 01010001 00000010 10001001 01011100 11010011 00100001 00000011
+and the revert string           : 00000011 00100001 11010011 01011100 10001001 00000010 01010001
+and then, using the tables      : 0000 0011 0010 0001 11010 01101 01110 01000 10010 00000 10010 10001
+and then                        : "210" & "noitats
+and then, using b-tree table    : Description:"station" & Phone Number:"012"
+</PRE>
+
+
+<a name="EncodedCoord" />
+<H2>The way Latitude is encoded</H2>
+Latitudes in POI Records are encoded on 3 bytes unsigned value (little endian) (in decimal degrees).
+<BR>
+The final value is obtain by this formula (considering X as the 3 bytes value) :
+<P>
+	Latitude = (X/100000 - 80)
+
+<H2>The way longitude is encoded</H2>
+Longitudes in POI Records are encoded on 3 bytes unsigned value (little endian) (in decimal degrees).
+<BR>
+Longitude could be obtain with the same formula as latitude, but there is some corrective value : 3 bytes only let store 16777216 values (so nearly 167° on 360°). Depending on the aera zone the POI exists (refer to his parent Aera Record), an offset should be applied.
+<P>
+The primary value is obtain by this formula (considering X as the 3 bytes value) :
+<P>
+	<I>Note : let compute integer value to minimize floating approximations</I>
+	<P>
+	Let applie this formula <BR>
+	&nbsp;&nbsp;Longitude = (X - 8000000) <BR>
+	until Longitude inside the 2 longitudes values stored in his parent Aera Record.<BR>
+	If Longitude if under the -180°, then add 360°.
+	<P>
+Europe don't have to applied these offset, but it's the case for USA.<P>
+For example :
+<PRE>
+  For an Area Record of (-165.12345, 55.12345) - (-151.12345, 58.12345)  (Alaska)
+  The POI Longitude is : 0x6C9785  that is 8755052 in decimal
+     8755052 - 8000000 =    755052
+      755052 - 8000000 =  -7244948
+    -7244948 - 8000000 = -15244948   it's this value !!!
+</PRE>
+<I>Note : Thanks to Lutz Bendlin for his work</I>
+
+<P>
+	
+<a name="AnnexeA" />
+<H2>Annexe A : Category ID</H2>
+Here is the categories ID that exists in Tomtom Navigator. This list is as complete as possible.
+<P>
+<table border="1">
+	<TR><TD><b>Category ID</b></TD><TD><b>English</b></TD><TD><b>French</b></TD></TR>
+  <TR><TD>7367</TD><TD>Government Office</TD><TD>Bureau gouvernemental</TD></TR>
+  <TR><TD>9364</TD><TD>mountain Peak</TD><TD>Sommet montagneux</TD></TR>
+  <TR><TD>7369</TD><TD>Open Parking</TD><TD>Parking ouvert</TD></TR>
+  <TR><TD>7313</TD><TD>Parking Garage</TD><TD>Parking couvert</TD></TR>
+  <TR><TD>7311</TD><TD>Petrol Station</TD><TD>Station-essence</TD></TR>
+  <TR><TD>7380</TD><TD>Railway Station</TD><TD>Gare ferroviaire</TD></TR>
+  <TR><TD>7395</TD><TD>Rest Area</TD><TD>Aire de repos</TD></TR>
+  <TR><TD>7383</TD><TD>Airport</TD><TD>Aéroport</TD></TR>
+  <TR><TD>9910</TD><TD>Car Dealer</TD><TD>Concessionnaire automobile</TD></TR>
+  <TR><TD>7341</TD><TD>Casino</TD><TD>Casino</TD></TR>
+  <TR><TD>9906</TD><TD>Church</TD><TD>Eglise</TD></TR>
+  <TR><TD>7342</TD><TD>Cinema</TD><TD>Cinéma</TD></TR>
+  <TR><TD>7379</TD><TD>City Center</TD><TD>Centre-ville</TD></TR>
+  <TR><TD>9352</TD><TD>Company</TD><TD>Société</TD></TR>
+  <TR><TD>9367</TD><TD>Concert Hall</TD><TD>Salle de concerts</TD></TR>
+  <TR><TD>9363</TD><TD>Courthouse</TD><TD>Palais de justice</TD></TR>
+  <TR><TD>7319</TD><TD>Cultural Center</TD><TD>Centre culturel</TD></TR>
+  <TR><TD>7385</TD><TD>Exhibition Center</TD><TD>Centre des expositions</TD></TR>
+  <TR><TD>7352</TD><TD>Ferry Terminal</TD><TD>Terminal de car-ferry</TD></TR>
+  <TR><TD>7366</TD><TD>Frontier Crossing</TD><TD>Frontière</TD></TR>
+  <TR><TD>9911</TD><TD>Golf Course</TD><TD>Terrain de golf</TD></TR>
+  <TR><TD>7321</TD><TD>Hospital Polyclinic</TD><TD>Hôpital/clinique</TD></TR>
+  <TR><TD>7314</TD><TD>Hotel/Motel</TD><TD>Hôtel/motel</TD></TR>
+  <TR><TD>7376</TD><TD>Tourist Attraction</TD><TD>Site touristique</TD></TR>
+  <TR><TD>9935</TD><TD>mountain Pass</TD><TD>Col montagneux</TD></TR>
+  <TR><TD>7317</TD><TD>museum</TD><TD>Musée</TD></TR>
+  <TR><TD>9365</TD><TD>Opera</TD><TD>Opéra</TD></TR>
+  <TR><TD>7339</TD><TD>Place of Worship</TD><TD>Lieu de recueil</TD></TR>
+  <TR><TD>7324</TD><TD>Post Office</TD><TD>Bureau de poste</TD></TR>
+  <TR><TD>7312</TD><TD>Rent Car Facility</TD><TD>Centre de location de véhicules</TD></TR>
+  <TR><TD>9930</TD><TD>Rent Car Parking</TD><TD>Parking pour véhicules de location</TD></TR>
+  <TR><TD>7315</TD><TD>Restaurant</TD><TD>Restaurant</TD></TR>
+  <TR><TD>9361</TD><TD>shop</TD><TD>Magasin</TD></TR>
+  <TR><TD>7373</TD><TD>shopping Center</TD><TD>Centre commercial</TD></TR>
+  <TR><TD>7374</TD><TD>stadium</TD><TD>Stade</TD></TR>
+  <TR><TD>7318</TD><TD>Theatre</TD><TD>Théâtre</TD></TR>
+  <TR><TD>7316</TD><TD>Tourist Information Office</TD><TD>Syndicat d'initiative</TD></TR>
+  <TR><TD>9927</TD><TD>Zoo</TD><TD>Zoo</TD></TR>
+  <TR><TD>7320</TD><TD>sports Centre</TD><TD>Complexe sportif</TD></TR>
+  <TR><TD>7322</TD><TD>Police Station</TD><TD>Commissariat de police</TD></TR>
+  <TR><TD>7365</TD><TD>Embassy</TD><TD>Ambassade</TD></TR>
+  <TR><TD>7377</TD><TD>College University</TD><TD>Lycée/université</TD></TR>
+  <TR><TD>7397</TD><TD>Cash Dispenser</TD><TD>Billetterie</TD></TR>
+  <TR><TD>9357</TD><TD>Beach</TD><TD>Plage</TD></TR>
+  <TR><TD>9360</TD><TD>Ice Skating Ring</TD><TD>Patinoire</TD></TR>
+  <TR><TD>9369</TD><TD>Tennis Court</TD><TD>Court de tennis</TD></TR>
+  <TR><TD>9371</TD><TD>Water Sport</TD><TD>Centre de sports aquatiques</TD></TR>
+  <TR><TD>9373</TD><TD>Doctor</TD><TD>Docteur</TD></TR>
+  <TR><TD>9374</TD><TD>Dentist</TD><TD>Dentiste</TD></TR>
+  <TR><TD>9375</TD><TD>Veterinarian</TD><TD>Vétérinaire</TD></TR>
+  <TR><TD>9379</TD><TD>Nightlife</TD><TD>Activités nocturnes</TD></TR>
+  <TR><TD>9902</TD><TD>Amusement Park</TD><TD>Parc d'attractions</TD></TR>
+  <TR><TD>9913</TD><TD>Library</TD><TD>Bibliothèque</TD></TR>
+  <TR><TD>7310</TD><TD>Car Repair Facility</TD><TD>Réparations automobiles</TD></TR>
+  <TR><TD>7326</TD><TD>Pharmacy</TD><TD>Pharmacie</TD></TR>
+  <TR><TD>7337</TD><TD>scenic/Panoramic View</TD><TD>Vue panoramique</TD></TR>
+  <TR><TD>7338</TD><TD>swimming Pool</TD><TD>Piscine</TD></TR>
+  <TR><TD>7349</TD><TD>Winery</TD><TD>Cave à vins</TD></TR>
+  <TR><TD>7360</TD><TD>Camping Ground</TD><TD>Terrain de camping</TD></TR>
+  <TR><TD>9362</TD><TD>Park and Recreation Area</TD><TD>Parc et aire de jeux</TD></TR>
+  <TR><TD>9377</TD><TD>Convention Centre</TD><TD>Centre de conventions</TD></TR>
+  <TR><TD>9378</TD><TD>Leisure Centre</TD><TD>Centre de loisirs</TD></TR>
+  <TR><TD>9380</TD><TD>yacht Basi</TD><TD>Marina</TD></TR>
+  <TR><TD>9980</TD><TD>&nbsp;</TD><TD>Code postal</TD></TR>
+  <TR><TD>9800</TD><TD>&nbsp;</TD><TD>Légal/Mandataires</TD></TR>
+  <TR><TD>9801</TD><TD>&nbsp;</TD><TD>Légal/Autre</TD></TR>
+</table>
+
+
+<a name="AnnexeB" />
+<H2>Annexe B : Record 8 transposition table</H2>
+This table refers to Record 8
+<P>
+<table border="1">
+	<TR><TD><B>5 bits value</B></TD><TD><B>Trasposition letter</B></TD></TR>
+  <TR><TD align=center>00000</TD><TD align=center>not used</TD></TR>
+  <TR><TD align=center>00001</TD><TD align=center>.</TD></TR>
+  <TR><TD align=center>00010</TD><TD align=center>&lt;space&gt;</TD></TR>
+  <TR><TD align=center>00011</TD><TD align=center>S</TD></TR>
+  <TR><TD align=center>00100</TD><TD align=center>a</TD></TR>
+  <TR><TD align=center>00101</TD><TD align=center>e</TD></TR>
+  <TR><TD align=center>00110</TD><TD align=center>r</TD></TR>
+  <TR><TD align=center>00111</TD><TD align=center>i</TD></TR>
+  <TR><TD align=center>01000</TD><TD align=center>o</TD></TR>
+  <TR><TD align=center>01001</TD><TD align=center>n</TD></TR>
+  <TR><TD align=center>01010</TD><TD align=center>s</TD></TR>
+  <TR><TD align=center>01011</TD><TD align=center>t</TD></TR>
+  <TR><TD align=center>01100</TD><TD align=center>l</TD></TR>
+  <TR><TD align=center>01101</TD><TD align=center>d</TD></TR>
+  <TR><TD align=center>01110</TD><TD align=center>c</TD></TR>
+  <TR><TD align=center>01111</TD><TD align=center>h</TD></TR>
+  <TR><TD align=center>10000</TD><TD align=center>u</TD></TR>
+  <TR><TD align=center>10001</TD><TD align=center>m</TD></TR>
+  <TR><TD align=center>10010</TD><TD align=center>g</TD></TR>
+  <TR><TD align=center>10011</TD><TD align=center>p</TD></TR>
+  <TR><TD align=center>10100</TD><TD align=center>b</TD></TR>
+  <TR><TD align=center>10101</TD><TD align=center>k</TD></TR>
+  <TR><TD align=center>10110</TD><TD align=center>f</TD></TR>
+  <TR><TD align=center>10111</TD><TD align=center>z</TD></TR>
+  <TR><TD align=center>11000</TD><TD align=center>v</TD></TR>
+  <TR><TD align=center>11001</TD><TD align=center>A</TD></TR>
+  <TR><TD align=center>11010</TD><TD align=center>C</TD></TR>
+  <TR><TD align=center>11011</TD><TD align=center>B</TD></TR>
+  <TR><TD align=center>11100</TD><TD align=center>M</TD></TR>
+  <TR><TD align=center>11101</TD><TD align=center>P</TD></TR>
+  <TR><TD align=center>11110</TD><TD align=center>G</TD></TR>
+  <TR><TD align=center>11111</TD><TD align=center>-</TD></TR>
+</table>
+
+
+<a name="AnnexeC" />
+<H2>Annexe C : Record 8 transposition table</H2>
+This table refers to Record 8
+<P>
+  <table border=1>
+  	<TR><TD><B>quartet source</B></TD><TD><B>quartet destination</B></TD></TR>
+  	<TR><TD align=center>1000</TD><TD align=center>0010</TD></TR>
+  	<TR><TD align=center>1001</TD><TD align=center>0011</TD></TR>
+  	<TR><TD align=center>1010</TD><TD align=center>0100</TD></TR>
+  	<TR><TD align=center>1011</TD><TD align=center>0101</TD></TR>
+  	<TR><TD align=center>1100</TD><TD align=center>0110</TD></TR>
+  	<TR><TD align=center>1101</TD><TD align=center>0111</TD></TR>
+  	<TR><TD align=center>1110</TD><TD align=center>1110</TD></TR>
+  	<TR><TD align=center>1111</TD><TD align=center>1111</TD></TR>
+	</table>
+
+<a name="AnnexeD" />
+<H2>Annexe D : Record 9 transposition table</H2>
+This table refers to Record 9.
+<BR>
+<I>Note : this table is not complete, and must be complete if others sequences are discovered</I>
+<P>
+  <table border=1>
+  	<TR><TD><B>b-tree sequence of bits</B></TD><TD><B>character</B></TD></TR>
+          <TR><TD>0010</TD><TD>space</TD></TR>
+          <TR><TD>0011</TD><TD>a</TD></TR>
+          <TR><TD>1010110</TD><TD>A</TD></TR>
+          <TR><TD>101010</TD><TD>b</TD></TR>
+          <TR><TD>00001010</TD><TD>B</TD></TR>
+          <TR><TD>11010</TD><TD>c</TD></TR>
+          <TR><TD>00000010</TD><TD>C</TD></TR>
+          <TR><TD>01101</TD><TD>d</TD></TR>
+          <TR><TD>01100011</TD><TD>D</TD></TR>
+          <TR><TD>111</TD><TD>e</TD></TR>
+          <TR><TD>010010101</TD><TD>E</TD></TR>
+          <TR><TD>0100100</TD><TD>f</TD></TR>
+          <TR><TD>010001000</TD><TD>F</TD></TR>
+          <TR><TD>010011</TD><TD>g</TD></TR>
+          <TR><TD>01000111</TD><TD>G</TD></TR>
+          <TR><TD>000001</TD><TD>h</TD></TR>
+          <TR><TD>10100000</TD><TD>H</TD></TR>
+          <TR><TD>0111</TD><TD>i</TD></TR>
+          <TR><TD>0000101100</TD><TD>I</TD></TR>
+          <TR><TD>000010111</TD><TD>j</TD></TR>
+          <TR><TD>0100010011</TD><TD>J</TD></TR>
+          <TR><TD>0000000</TD><TD>k</TD></TR>
+          <TR><TD>000000111</TD><TD>K</TD></TR>
+          <TR><TD>00011</TD><TD>l</TD></TR>
+          <TR><TD>10100001</TD><TD>L</TD></TR>
+          <TR><TD>010000</TD><TD>m</TD></TR>
+          <TR><TD>00001110</TD><TD>M</TD></TR>
+          <TR><TD>1001</TD><TD>n</TD></TR>
+          <TR><TD>0000001100</TD><TD>N</TD></TR>
+          <TR><TD>1000</TD><TD>o</TD></TR>
+          <TR><TD>0100011001</TD><TD>O</TD></TR>
+          <TR><TD>011001</TD><TD>p</TD></TR>
+          <TR><TD>01000101</TD><TD>P</TD></TR>
+          <TR><TD>1010111001</TD><TD>q</TD></TR>
+          <TR><TD>1010111000000</TD><TD>Q</TD></TR>
+          <TR><TD>0101</TD><TD>r</TD></TR>
+          <TR><TD>01100000</TD><TD>R</TD></TR>
+          <TR><TD>00010</TD><TD>s</TD></TR>
+          <TR><TD>0000100</TD><TD>S</TD></TR>
+          <TR><TD>1100</TD><TD>t</TD></TR>
+          <TR><TD>000011111</TD><TD>T</TD></TR>
+          <TR><TD>11011</TD><TD>u</TD></TR>
+          <TR><TD>01100001101</TD><TD>U</TD></TR>
+          <TR><TD>1010011</TD><TD>v</TD></TR>
+          <TR><TD>000011110</TD><TD>V</TD></TR>
+          <TR><TD>10100010</TD><TD>w</TD></TR>
+          <TR><TD>011000010</TD><TD>W</TD></TR>
+          <TR><TD>1010001100</TD><TD>x</TD></TR>
+          <TR><TD>01001010010101</TD><TD>X</TD></TR>
+          <TR><TD>01100010</TD><TD>y</TD></TR>
+          <TR><TD>1010111111001</TD><TD>Y</TD></TR>
+          <TR><TD>1010010</TD><TD>z</TD></TR>
+          <TR><TD>01000110000</TD><TD>Z</TD></TR>
+          <TR><TD>1010001111</TD><TD>é</TD></TR>
+          <TR><TD>101000110111</TD><TD>è</TD></TR>
+          <TR><TD>10101111110001</TD><TD>ë</TD></TR>
+          <TR><TD>0000101101110110</TD><TD>ê</TD></TR>
+          <TR><TD>00001011011110</TD><TD>ô</TD></TR>
+          <TR><TD>1010001110</TD><TD>ö</TD></TR>
+          <TR><TD>01100001111</TD><TD>ó</TD></TR>
+          <TR><TD>10101111110111</TD><TD>ò</TD></TR>
+          <TR><TD>000010110111010100</TD><TD>õ</TD></TR>
+          <TR><TD>00001011011101111</TD><TD>î</TD></TR>
+          <TR><TD>01100001110111011</TD><TD>ï</TD></TR>
+          <TR><TD>10101110100</TD><TD>í</TD></TR>
+          <TR><TD>01001010010110</TD><TD>ì</TD></TR>
+          <TR><TD>010001101101001</TD><TD>â</TD></TR>
+          <TR><TD>0110000111010</TD><TD>à</TD></TR>
+          <TR><TD>1010111110</TD><TD>ä</TD></TR>
+          <TR><TD>1010001101011</TD><TD>å</TD></TR>
+          <TR><TD>010001101100</TD><TD>á</TD></TR>
+          <TR><TD>01000110110101</TD><TD>ã</TD></TR>
+          <TR><TD>010001100010</TD><TD>æ</TD></TR>
+          <TR><TD>1010111000001</TD><TD>ç</TD></TR>
+          <TR><TD>0100101000</TD><TD>ü</TD></TR>
+          <TR><TD>101011111100001011</TD><TD>û</TD></TR>
+          <TR><TD>010001101101000</TD><TD>ù</TD></TR>
+          <TR><TD>01001010010111</TD><TD>ú</TD></TR>
+          <TR><TD>000010110111010101011</TD><TD>ÿ</TD></TR>
+          <TR><TD>000010110111011101010</TD><TD>Â</TD></TR>
+          <TR><TD>01100001110110</TD><TD>Å</TD></TR>
+          <TR><TD>1010001101010</TD><TD>Ä</TD></TR>
+          <TR><TD>000010110111010110</TD><TD>À</TD></TR>
+          <TR><TD>101011111101101</TD><TD>Á</TD></TR>
+          <TR><TD>101011111100001001101</TD><TD>Ã</TD></TR>
+          <TR><TD>1010111111000010100</TD><TD>Æ</TD></TR>
+          <TR><TD>011000011101110010001</TD><TD>Ç</TD></TR>
+          <TR><TD>1010111111011000</TD><TD>É</TD></TR>
+          <TR><TD>0100101001010001</TD><TD>È</TD></TR>
+          <TR><TD>10101111110000100000110</TD><TD>Ê</TD></TR>
+          <TR><TD>00001011011101110100100</TD><TD>Ë</TD></TR>
+          <TR><TD>01100001110111010</TD><TD>Í</TD></TR>
+          <TR><TD>00001011011101110100101</TD><TD>Î</TD></TR>
+          <TR><TD>101011111100001000010</TD><TD>Ï</TD></TR>
+          <TR><TD>101011111100001010111</TD><TD>Ô</TD></TR>
+          <TR><TD>0100011011011</TD><TD>Ö</TD></TR>
+          <TR><TD>000010110111011101000</TD><TD>Ò</TD></TR>
+          <TR><TD>00001011011101110110</TD><TD>Ó</TD></TR>
+          <TR><TD>1010111111000001011011</TD><TD>Û</TD></TR>
+          <TR><TD>00001011011100</TD><TD>Ü</TD></TR>
+          <TR><TD>011000011101110001</TD><TD>Ú</TD></TR>
+          <TR><TD>10101111110000101010</TD><TD>Ñ</TD></TR>
+          <TR><TD>1010111111010</TD><TD>ñ</TD></TR>
+          <TR><TD>101011110</TD><TD>ß</TD></TR>
+          <TR><TD>011000011100</TD><TD>ø</TD></TR>
+          <TR><TD>011000011101111</TD><TD>Ø</TD></TR>
+          <TR><TD>1010111111011001</TD><TD>ª</TD></TR>
+          <TR><TD>0100101001010000</TD><TD>ý  (U+00FD)</TD></TR>
+          <TR><TD>0000101101110100</TD><TD>l  (U+0142)</TD></TR>
+          <TR><TD>101011111100001000110111</TD><TD>L  (U+0141)</TD></TR>
+          <TR><TD>0110000111011100101</TD><TD>0xba</TD></TR>
+          <TR><TD>0100011010</TD><TD>'</TD></TR>
+          <TR><TD>1010111111000011</TD><TD>’</TD></TR>
+          <TR><TD>011000011101110011</TD><TD>`</TD></TR>
+          <TR><TD>101011111100001001100</TD><TD>$</TD></TR>
+          <TR><TD>010001100011</TD><TD>"</TD></TR>
+          <TR><TD>011000011101110010000</TD><TD>\</TD></TR>
+          <TR><TD>101011111100001010110</TD><TD>?</TD></TR>
+          <TR><TD>01001011</TD><TD>-</TD></TR>
+          <TR><TD>0000101101110101011</TD><TD>_</TD></TR>
+          <TR><TD>10101111110000011</TD><TD>:</TD></TR>
+          <TR><TD>00001011011101010100</TD><TD>;</TD></TR>
+          <TR><TD>0000110</TD><TD>.</TD></TR>
+          <TR><TD>1010111011</TD><TD>,</TD></TR>
+          <TR><TD>0100010010</TD><TD>&</TD></TR>
+          <TR><TD>10101111110000100001110</TD><TD>#</TD></TR>
+          <TR><TD>00001011011111</TD><TD>+</TD></TR>
+          <TR><TD>101011111100000100</TD><TD>*</TD></TR>
+          <TR><TD>01100001110111001001</TD><TD>!</TD></TR>
+          <TR><TD>10101111110000100001101</TD><TD>></TD></TR>
+          <TR><TD>0000101101110111011110</TD><TD>@</TD></TR>
+          <TR><TD>000010110111010101010</TD><TD>°</TD></TR>
+          <TR><TD>0000001101</TD><TD>/</TD></TR>
+          <TR><TD>10101110001</TD><TD>0</TD></TR>
+          <TR><TD>00001011010</TD><TD>1</TD></TR>
+          <TR><TD>01000110111</TD><TD>2</TD></TR>
+          <TR><TD>10101110101</TD><TD>3</TD></TR>
+          <TR><TD>10101111111</TD><TD>4</TD></TR>
+          <TR><TD>010010100100</TD><TD>5</TD></TR>
+          <TR><TD>101000110110</TD><TD>6</TD></TR>
+          <TR><TD>101000110100</TD><TD>7</TD></TR>
+          <TR><TD>000010110110</TD><TD>8</TD></TR>
+          <TR><TD>101011100001</TD><TD>9</TD></TR>
+          <TR><TD>01001010011</TD><TD>(</TD></TR>
+          <TR><TD>01100001100</TD><TD>)</TD></TR>
+          <TR><TD>000010110111010111</TD><TD>[</TD></TR>
+          <TR><TD>000010110111011100</TD><TD>]</TD></TR>
+          <TR><TD>101011111100000101000010</TD><TD>{</TD></TR>
+          <TR><TD>101011111100000101000000</TD><TD>}</TD></TR>
+          <TR><TD>1010111111000001011010</TD><TD>space ???</TD></TR>
+          <TR><TD>1011</TD><TD>End of string</TD></TR>
+<table> 
+
+
+<a name="AnnexeE" />
+<H2>Annexe E : Record 12 transposition table (text table)</H2>
+This table refers to Record 12
+<P>
+Caution : this table DOES NOT contain letter Q ! 
+<P>
+  <table border=1>
+  	<TR><TD><B>5-bit code</B></TD><TD><B>text character</B></TD></TR>
+  	<TR><TD align=center>00000</TD><TD align=center>a</TD></TR>
+  	<TR><TD align=center>00001</TD><TD align=center>b</TD></TR>
+  	<TR><TD align=center>00010</TD><TD align=center>c</TD></TR>
+  	<TR><TD align=center>00011</TD><TD align=center>d</TD></TR>
+  	<TR><TD align=center>00100</TD><TD align=center>e</TD></TR>
+  	<TR><TD align=center>00101</TD><TD align=center>f</TD></TR>
+  	<TR><TD align=center>00110</TD><TD align=center>g</TD></TR>
+  	<TR><TD align=center>00111</TD><TD align=center>h</TD></TR>
+  	<TR><TD align=center>01000</TD><TD align=center>i</TD></TR>
+  	<TR><TD align=center>01001</TD><TD align=center>j</TD></TR>
+  	<TR><TD align=center>01010</TD><TD align=center>k</TD></TR>
+  	<TR><TD align=center>01011</TD><TD align=center>l</TD></TR>
+  	<TR><TD align=center>01100</TD><TD align=center>m</TD></TR>
+  	<TR><TD align=center>01101</TD><TD align=center>n</TD></TR>
+  	<TR><TD align=center>01110</TD><TD align=center>o</TD></TR>
+  	<TR><TD align=center>01111</TD><TD align=center>p</TD></TR>
+  	<TR><TD align=center>10000</TD><TD align=center>r</TD></TR>
+  	<TR><TD align=center>10001</TD><TD align=center>s</TD></TR>
+  	<TR><TD align=center>10010</TD><TD align=center>t</TD></TR>
+  	<TR><TD align=center>10011</TD><TD align=center>u</TD></TR>
+  	<TR><TD align=center>10100</TD><TD align=center>v</TD></TR>
+  	<TR><TD align=center>10101</TD><TD align=center>w</TD></TR>
+  	<TR><TD align=center>10110</TD><TD align=center>x</TD></TR>
+  	<TR><TD align=center>10111</TD><TD align=center>y</TD></TR>
+  	<TR><TD align=center>11000</TD><TD align=center>z</TD></TR>
+  	<TR><TD align=center>11001</TD><TD align=center>space</TD></TR>
+  	<TR><TD align=center>11010</TD><TD align=center>End of string</TD></TR>
+  	<TR><TD align=center>11011</TD><TD align=center>(</TD></TR>
+  	<TR><TD align=center>11100</TD><TD align=center>)</TD></TR>
+  	<TR><TD align=center>11101</TD><TD align=center>&</TD></TR>
+  	<TR><TD align=center>11110</TD><TD align=center>'</TD></TR>
+  	<TR><TD align=center>11111</TD><TD align=center>-</TD></TR>
+</table>
+
+
+
+<a name="AnnexeF" />
+<H2>Annexe F : Record 12 transposition table (numeric table)</H2>
+This table refers to Record 12
+
+<P>
+  <table border=1>
+  	<TR><TD><B>4-bit code</B></TD><TD><B>Numeric character</B></TD></TR>
+  	<TR><TD align=center>0000</TD><TD align=center>End of String</TD></TR>
+  	<TR><TD align=center>0001</TD><TD align=center>0</TD></TR>
+  	<TR><TD align=center>0010</TD><TD align=center>1</TD></TR>
+  	<TR><TD align=center>0011</TD><TD align=center>2</TD></TR>
+  	<TR><TD align=center>0100</TD><TD align=center>3</TD></TR>
+  	<TR><TD align=center>0101</TD><TD align=center>4</TD></TR>
+  	<TR><TD align=center>0110</TD><TD align=center>5</TD></TR>
+  	<TR><TD align=center>0111</TD><TD align=center>6</TD></TR>
+  	<TR><TD align=center>1000</TD><TD align=center>7</TD></TR>
+  	<TR><TD align=center>1001</TD><TD align=center>8</TD></TR>
+  	<TR><TD align=center>1010</TD><TD align=center>9</TD></TR>
+  	<TR><TD align=center>1011</TD><TD align=center>-</TD></TR>
+  	<TR><TD align=center>1100</TD><TD align=center>(</TD></TR>
+  	<TR><TD align=center>1101</TD><TD align=center>)</TD></TR>
+  	<TR><TD align=center>1110</TD><TD align=center>+</TD></TR>
+  	<TR><TD align=center>1111</TD><TD align=center>#</TD></TR>
+</table>
+
+<HR>
+Updates : 
+<BR>
+Aug 09 2005 : Original<BR>
+Aug 11 2005 : Added Record 10 (thanks to "Didier71")<BR>
+Aug 12 2005 : Fix Longitude decoding (thanks to Lutz Bendlin)<BR>
+Sep 03 2005 : Fix Length Record 01<BR>
+Sep 09 2005 : Add record 02<BR>
+Sep 16 2005 : Add new record, update Record 9 table<BR>
+<HR>
+Derni&egrave;re mise &agrave; jour : 
+<!-- #BeginDate format:En2 -->16-Septembre-2005<!-- #EndDate -->
+<br>
+Laurent Licour - laurent at licour.com</a> 
+
+</body>
+
+<!-- Mirrored from www.licour.com/gps/poi_format/poi_file_format.htm by HTTrack Website Copier/3.x [XR&CO'2005], Fri, 23 Dec 2005 10:26:21 GMT -->
+</html>
+
+
+
+
+
+         

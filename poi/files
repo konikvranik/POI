@@ -1,0 +1,568 @@
+config: ./etc/catgroup.conf
+cat: Marina.ov2
+src: yacht Basin.ov2
+cat: Fastfood.ov2
+src: CZ-Fastfood KFC.ov2
+src: CZ-Fastfood McDonalds.ov2
+src: CZ-Fastfood bageterie.ov2
+src: EU-Fastfood Burger_King.ov2
+src: EU-Fastfood KFC.ov2
+src: EU-Fastfood McDonalds.ov2
+src: FR-Buffalo Grill.ov2
+src: FR-KFC.ov2
+src: FR-McDonalds.ov2
+src: IT-McDonalds.ov2
+cat: Knihovny.ov2
+src: CZ-Knihovny.ov2
+src: Library.ov2
+cat: Recyklace_sberne_dvory.ov2
+src: CZ-Recyklace_sberne_dvory.ov2
+cat: Autoservis.ov2
+src: CZ-Autoservis.ov2
+src: CZ-Pneu_ABC.ov2
+src: CZ-Pneu_Chara.ov2
+src: CZ-Pneu_ostatni.ov2
+src: CZ-Pneu_Safranek.ov2
+src: CZ-Pneu_Kajgr.ov2
+src: Car Repair Facility.ov2
+cat: Divadlo.ov2
+src: CZ-Divadlo.ov2
+src: Theatre.ov2
+cat: Prodejce_automobilu.ov2
+src: Car Dealer.ov2
+src: CZ-Auto_Audi.ov2
+src: CZ-Auto_BMW.ov2
+src: CZ-Auto_Citroen.ov2
+src: CZ-Auto_FIAT.ov2
+src: CZ-Auto_Ford.ov2
+src: CZ-Auto_Honda.ov2
+src: CZ-Auto_Hyundai.ov2
+src: CZ-Auto_Chevrolet(Daewoo).ov2
+src: CZ-Auto_Mazda.ov2
+src: CZ-Auto_Mercedes.ov2
+src: CZ-Auto_Mini.ov2
+src: CZ-Auto_Nissan.ov2
+src: CZ-Auto_Opel.ov2
+src: CZ-Auto_Peugeot.ov2
+src: CZ-Auto_Renault.ov2
+src: CZ-Auto_Seat.ov2
+src: CZ-Auto_Skoda.ov2
+src: CZ-Auto_Toyota.ov2
+src: CZ-Auto_Volvo.ov2
+src: CZ-Auto_VW.ov2
+src: CZ-Autobazar.ov2
+src: CZ-Autotuning shop.ov2
+src: SK-Auto_Mazda.ov2
+src: CZ-Truck_Volvo.ov2
+cat: Meteorologicka_stanice.ov2
+src: CZ-Meteorologicka stanice.ov2
+cat: Odpocivadla.ov2
+src: CZ-Odpocivadla.ov2
+src: Rest Area.ov2
+cat: Tenis.ov2
+src: CZ-Tenis.ov2
+src: Tennis Court.ov2
+cat: Internet.ov2
+src: CZ-Internet.ov2
+cat: Obchody.ov2
+src: shop.ov2
+src: CZ-Nakup_Albert.ov2
+src: FR-CORA.ov2
+src: FR-Geant.ov2
+src: FR-Leclerc.ov2
+src: CZ-Nakup_Asko.ov2
+src: CZ-Nakup_Bata.ov2
+src: CZ-Nakup_Bauhaus.ov2
+src: CZ-Nakup_bauMax-x.ov2
+src: CZ-Nakup_Billa.ov2
+src: CZ-Nakup_Datart.ov2
+src: CZ-Nakup_Delvita.ov2
+src: CZ-Nakup_Digipoint.ov2
+src: CZ-Nakup_Drapa.ov2
+src: CZ-Nakup_ElectroWorld.ov2
+src: CZ-Nakup_Gigasport.ov2
+src: CZ-Nakup_Globus.ov2
+src: CZ-Nakup_Hornbach.ov2
+src: SK-Nakup_Hornbach.ov2
+src: SK-Nakup_IKEA.ov2
+src: SK-Nakup_modelarstvo.ov2
+src: CZ-Nakup_Hypernova.ov2
+src: CZ-Nakup_IKEA.ov2
+src: Ikea.ov2
+src: CZ-Nakup_Interspar.ov2
+src: CZ-Nakup_Intersport.ov2
+src: CZ-Nakup_Jednota.ov2
+src: CZ-Nakup_Kaufland.ov2
+src: CZ-Nakup_KIKA.ov2
+src: CZ-Nakup_Koberce_Breno.ov2
+src: CZ-Nakup_Koberce_K+K.ov2
+src: CZ-Nakup_Koberce_Trend.ov2
+src: CZ-Nakup_Lidl.ov2
+src: SK-Nakup_Tesco.ov2
+src: FR-Auchan obchod.ov2
+src: CZ-Nakup_Rossmann.ov2
+src: CZ-Nakup_Elektro_Spacil.ov2
+src: CZ-Nakup_Jysk.ov2
+src: CZ-Nakup_Schlecker.ov2
+src: Lidl.ov2
+src: Wal_Mart.ov2
+src: Spar.ov2
+src: SuperMarkets.ov2
+src: Media_Markt.ov2
+src: CZ-Nakup_Makro.ov2
+src: CZ-Nakup_Mountfield.ov2
+src: CZ-Nakup_OBI.ov2
+src: CZ-Nakup_Okay.ov2
+src: CZ-Nakup_Penny.ov2
+src: CZ-Nakup_Plus.ov2
+src: CZ-Nakup_Sconto.ov2
+src: CZ-Nakup_Sephora.ov2
+src: CZ-Nakup_Tesco.ov2
+src: CZ-Nakup_Hudy_Sport.ov2
+src: FR-Nakup_Carrefour.ov2
+src: CZ-Kvetiny_a_zahradnictvi.ov2
+src: Boels_Verhuur.ov2
+src: CZ-Autotuning shop.ov2
+src: CZ-Nakup_modelarske_prodejny.ov2
+src: F-Nakup_Carrefour.ov2
+cat: Bankomaty.ov2
+src: CZ-Bankomaty.ov2
+src: CZ-Bankomaty_CSOB.ov2
+src: CZ-Bankomaty_Ceska_Sporitelna.ov2
+src: CZ-Bankomaty_Citibank.ov2
+src: CZ-Bankomaty_GE_Money_Bank.ov2
+src: CZ-Bankomaty_HVB_Bank.ov2
+src: CZ-Bankomaty_Ostatni.ov2
+src: CZ-Bankomaty_Volksbank.ov2
+src: CZ-Bankomaty_Zivnostenska_banka.ov2
+src: CZ-Bankomaty_eBanka.ov2
+src: CZ-Bankomaty_Komercni_banka.ov2
+src: CZ-Bankomaty_Raiffeisenbank.ov2
+src: cashpoints.ov2
+src: SK-Bankomat_Tatrabanka.ov2
+src: Cash Dispenser.ov2
+cat: Undef9359.ov2
+src: Undef9359.ov2
+cat: Veterinar.ov2
+src: Veterinarian.ov2
+src: CZ-Veterinari.ov2
+cat: Opera.ov2
+src: Opera.ov2
+cat: Casino.ov2
+src: Casino.ov2
+cat: Hranicni_Prechody.ov2
+src: CZ-Hranicni_Prech_SK.ov2
+src: CZ-Hranicni_Prech_PL.ov2
+src: CZ-Hranicni_Prech_DE.ov2
+src: CZ-Hranicni_Prech_AT.ov2
+src: Frontier Crossing.ov2
+cat: Radary.ov2
+src: HR-Radary.ov2
+src: IT-Radary.ov2
+src: FR-Radar.ov2
+src: FR-Radary.ov2
+cat: Nebezpecna_mista.ov2
+src: CZ-Nebezpecna_mista.ov2
+src: FR-Nebezpecna_mista.ov2
+cat: STK.ov2
+src: CZ-STK.ov2
+cat: Dalnice_km.ov2
+src: CZ-Dalnice_km.ov2
+cat: Restaurace.ov2
+src: CZ-Restaurace.ov2
+src: Restaurant.ov2
+src: Restaurants.ov2
+src: Sushi.ov2
+cat: Nakupni_centra.ov2
+src: CZ-Nakupni_centra.ov2
+src: shopping Center.ov2
+cat: Obce.ov2
+src: CZ-Zanikla_sidla.ov2
+src: CZ-Skupiny_domu+chat.ov2
+src: CZ-Osamele_domy.ov2
+cat: Privozy_pristavy.ov2
+src: Ferry Terminal.ov2
+src: CZ-Privozy_pristavy.ov2
+cat: Cajovny.ov2
+src: CZ-Cajovny.ov2
+cat: Aquaparky_bazeny.ov2
+src: CZ-Aquaparky_bazeny.ov2
+src: Swimmingpools.ov2
+src: swimming Pool.ov2
+src: SK-Koupaliste_termalni.ov2
+cat: Hory_a_pohori.ov2
+src: CZ-Hory_a_pohori.ov2
+src: CZ-Tisicovky.ov2
+src: mountain Peak.ov2
+cat: Stadiony.ov2
+src: CZ-Fotbalove_stadiony.ov2
+src: CZ-Hokejove_Stadiony.ov2
+src: CZ-Stadion.ov2
+src: stadium.ov2
+src: Ice Skating Ring.ov2
+cat: Kostely.ov2
+src: EU-Religious_buildings.ov2
+cat: Park_a_rekreace.ov2
+src: Centerparcs.ov2
+src: Landal_GreenParks.ov2
+src: Park and Recreation Area.ov2
+src: CZ-Zahrady.ov2
+cat: Turisticke_informace.ov2
+src: CZ-Inf_centra.ov2
+src: Tourist Information Office.ov2
+src: SK-Turisticke informacie.ov2
+cat: Zeleznicni_stanice.ov2
+src: CZ-Zeleznicni_stanice.ov2
+src: Railway Station.ov2
+cat: Bruslarsky_stadion.ov2
+src: CZ-Inline_bruslarske_tereny.ov2
+src: Ice Skating Ring.ov2
+cat: Undef9372.ov2
+src: Undef9372.ov2
+cat: Sportovni_centra.ov2
+src: SK-Hokejove stadiony.ov2
+src: sports Centre.ov2
+src: Ice Skating Ring.ov2
+src: SK-SKI_area.ov2
+src: CZ-Basketbal.ov2
+src: CZ-Bowling.ov2
+src: CZ-Detska_hriste.ov2
+src: CZ-Kone_Staje.ov2
+src: CZ-Lanova_centra.ov2
+src: CZ-Lezeni_skalni.ov2
+src: CZ-Paintball.ov2
+src: CZ-SKI_area.ov2
+src: CZ-Squash.ov2
+src: CZ-Strelnice.ov2
+cat: Mytna_brana.ov2
+src: CZ-Premid_myto.ov2
+src: CZ-Mytne_brany.ov2
+cat: Plaze.ov2
+src: Beach.ov2
+src: CZ-Nudaplaze.ov2
+cat: Vodni_sporty.ov2
+src: Water Sport.ov2
+src: CZ-Prehrady.ov2
+cat: Metro_C.ov2
+src: CZ-Metro_C.ov2
+cat: Vyskove body.ov2
+src: CZ-Vyskove body.ov2
+cat: Parkoviste_pujcovny.ov2
+src: Rent Car Parking.ov2
+cat: Telefonni_budky.ov2
+src: CZ-Telefonni_budky.ov2
+cat: Ambasada.ov2
+src: CZ-Ambasada.ov2
+src: Embassy.ov2
+cat: Nemocnice.ov2
+src: CZ-Pohotovost.ov2
+src: CZ-Nemocnice.ov2
+src: Hospital Polyclinic.ov2
+src: Hospitals.ov2
+cat: Kina.ov2
+src: CZ-Kina.ov2
+src: Cinema.ov2
+cat: Dalnicni_Exity.ov2
+src: CZ-Dalnicni_Exity.ov2
+cat: Radary_semafory.ov2
+src: CZ-Radary_semafory.ov2
+src: SK-Radary_semafory.ov2
+cat: Turisticke_atrakce.ov2
+src: CZ-Ruzne_zajimavosti.ov2
+src: Tourist Attraction.ov2
+src: Sightseeings_and__Tourism.ov2
+src: CZ-Hrady.ov2
+src: SK-Hrady_zamky.ov2
+src: CZ-Pamatne_stromy.ov2
+src: CZ-Poutni_mista_Morava.ov2
+src: CZ-Rozhledny.ov2
+src: CZ-Unesco_Pamatky.ov2
+src: CZ-Turisticke_znamky.ov2
+src: CZ-Zriceniny.ov2
+src: Castle.ov2
+src: FR-Castle.ov2
+src: CZ-Zamky.ov2
+src: CZ-Jeskyne.ov2
+src: SK-Jaskyne.ov2
+src: SK-pamiatky.ov2
+src: EU-druha_svetova_valka.ov2
+cat: Graffiti.ov2
+src: CZ-Graffiti_Zony.ov2
+cat: Radary_mobilni.ov2
+src: CZ-Radary_mobilni.ov2
+src: FR-Radary_mobilni.ov2
+src: SK-Radary_mobilni.ov2
+cat: Radary_usekove.ov2
+src: CZ-Radary_usekove.ov2
+src: SK-Radary_usekove.ov2
+cat: Vysoke_skoly.ov2
+src: CZ-Vysoke_skoly.ov2
+src: College University.ov2
+cat: Zubar.ov2
+src: Dentist.ov2
+cat: Dive_lokality.ov2
+src: CZ-Dive_lokality.ov2
+cat: Horsky_prusmyk.ov2
+src: mountain Pass.ov2
+cat: Bazary_a_zastavarny.ov2
+src: CZ-Bazary_a_zastavarny.ov2
+cat: Cerpaci_stanice.ov2
+src: CZ-Cerpaci_stanice_Slovnaft.ov2
+src: FR-Agip.ov2
+src: IT-Agip.ov2
+src: IT-LPG.ov2
+src: IT-Q8.ov2
+src: IT-Shell.ov2
+src: IT-Total.ov2
+src: FR-Total.ov2
+src: CZ-Cerpaci_stanice_Shell.ov2
+src: CZ-Cerpaci_stanice_RobinOil.ov2
+src: CZ-Cerpaci_stanice_Petra.ov2
+src: FR-BP.ov2
+src: CZ-Cerpaci_stanice_Paramo_Trysk.ov2
+src: CZ-Cerpaci_stanice_PapOil.ov2
+src: CZ-Cerpaci_stanice_OMV.ov2
+src: CZ-Cerpaci_stanice_JET.ov2
+src: CZ-Cerpaci_stanice_Hunsgas.ov2
+src: CZ-Cerpaci_stanice_EuroOil.ov2
+src: CZ-Cerpaci_stanice_ESSO.ov2
+src: CZ-Cerpaci_stanice_Benzina.ov2
+src: CZ-Cerpaci_stanice_Agip.ov2
+src: CZ-CNG_Cerpaci_stanice.ov2
+src: CZ-LPG_Cerpaci_stanice.ov2
+src: CZ-Ostatni_Cerpaci_stanice.ov2
+src: SK-Cerpacie_stanice_ESSO.ov2
+src: SK-Cerpacie_stanice_SHELL.ov2
+src: Agip.ov2
+src: Aldi.ov2
+src: EU-LPG.ov2
+src: FR-LPG.ov2
+src: Aral_Petrol_Stations.ov2
+src: Avanti.ov2
+src: BP_Petrol_Stations.ov2
+src: Esso_Petrol_Stations.ov2
+src: JET.ov2
+src: OMV.ov2
+src: Petrol_Stations.ov2
+src: Shell_Petrol_Stations.ov2
+src: CZ-Ruzne_Cerpaci_stanice.ov2
+src: Petrol Station.ov2
+cat: Doprava_Prazska_Integrovana.ov2
+src: CZ-Doprava_Prazska_Integrovana.ov2
+cat: Lekarny.ov2
+src: Pharmacy.ov2
+src: CZ-Lekarny.ov2
+cat: Materske_skolky.ov2
+src: CZ-Materske_skolky_moravskoslezsko.ov2
+cat: Koncertni_hala.ov2
+src: Concert Hall.ov2
+cat: Hotel.ov2
+src: CZ-Hotel_Praha.ov2
+src: FR-Castle_Hotels.ov2
+src: FR-Hotel_Formule1.ov2
+src: EU-Hotely F1.ov2
+src: FR-Hotel_Etap.ov2
+src: FR-Hotel_Ibis.ov2
+src: Hotel-Motel.ov2
+src: CZ-Hotel.ov2
+src: CZ-Pension_ubytovani.ov2
+cat: Metro_B.ov2
+src: CZ-Metro_B.ov2
+cat: Metro_A.ov2
+src: CZ-Metro_A.ov2
+cat: Panorama.ov2
+src: scenic-Panoramic View.ov2
+cat: Kempy.ov2
+src: CZ-Kempy.ov2
+src: HR-Camp_hr.ov2
+src: FR-Camp_fr.ov2
+src: Camping Ground.ov2
+cat: Parkovaci_garaz.ov2
+src: Parking Garage.ov2
+src: CZ-Parkovaci garaz.ov2
+cat: Kulturni_centra.ov2
+src: CZ-Kulturni_domy.ov2
+src: Cultural Center.ov2
+cat: Soudni_sin.ov2
+src: CZ-Soudni sin.ov2
+src: Courthouse.ov2
+cat: Muzeum.ov2
+src: CZ-Muzeum.ov2
+src: SK-Muzeum.ov2
+src: CZ-Galerie.ov2
+src: museum.ov2
+src: Museum.ov2
+cat: Policie.ov2
+src: CZ-Policie.ov2
+src: CZ-Mestska_Policie_Praha.ov2
+src: Police Station.ov2
+src: Police.ov2
+cat: ZOO.ov2
+src: CZ-ZOO.ov2
+src: Zoo.ov2
+cat: GeoCaching.ov2
+src: CZ-Geocaching-multi.ov2
+src: CZ-Geocaching-mystery.ov2
+src: CZ-Geocaching-traditional.ov2
+src: CZ-Geocaching-virtual.ov2
+src: CZ-Geocaching-webcam.ov2
+cat: Parkoviste.ov2
+src: CZ-P+R.ov2
+src: CZ-Parkoviste.ov2
+src: Open Parking.ov2
+cat: Firmy.ov2
+src: CZ-Firma_Vodafone.ov2
+src: CZ-Firma_T-mobile.ov2
+src: CZ-Firma_Telepoint.ov2
+src: CZ-Firma_Telefonica O2.ov2
+src: CZ-Firma_Elit.ov2
+src: CZ-Firma_Digipoint.ov2
+src: CZ-Firma_Dektrade.ov2
+src: CZ-Firma_CK_FIRO-tour.ov2
+src: CZ-Firma_CK_Cedok.ov2
+src: CZ-Firma_CEZ.ov2
+src: CZ-T-Mobile_Znackove_prodejny.ov2
+src: Saturn.ov2
+src: Stroh.ov2
+src: Etap.ov2
+src: Company.ov2
+src: CZ-Banka_CM_Hypotecni_banka.ov2
+src: CZ-Banka_CM_staveb_spor.ov2
+src: CZ-Banka_CSOB.ov2
+src: CZ-Banka_Ceska_spor.ov2
+src: CZ-Banka_GE_Capital_bank.ov2
+src: CZ-Banka_GE_Money_Bank.ov2
+src: CZ-Banka_HVB_Bank.ov2
+src: CZ-Banka_Komercni_banka.ov2
+src: CZ-Banka_Oberbank.ov2
+src: CZ-Banka_Ostatni.ov2
+src: CZ-Banka_Raiffeisen_staveb_spor.ov2
+src: CZ-Banka_Raiffeisenbank.ov2
+src: CZ-Banka_Volksbank.ov2
+src: CZ-Banka_Vseobec_staveb_spor_KB.ov2
+src: CZ-Banka_Wustenrot.ov2
+src: CZ-Banka_Zivnostenska_banka.ov2
+src: CZ-Banka_eBanka.ov2
+src: CZ-Ceska_pojistovna.ov2
+src: CZ-UNIQA_pojistovna.ov2
+cat: Statni_instituce.ov2
+src: CZ-Statni_instituce.ov2
+src: CZ-UMC Praha.ov2
+src: CZ-Financni_urady.ov2
+src: CZ-Katastralni_urady.ov2
+src: Government Office.ov2
+cat: Golf.ov2
+src: CZ-Golf.ov2
+src: Golf Course.ov2
+cat: Lekar.ov2
+src: Doctor.ov2
+src: CZ-Doktori_detsti_moravskoslezsko.ov2
+cat: Archivy.ov2
+src: CZ-Archivy.ov2
+cat: Radary_stacionarni.ov2
+src: CZ-Radary_stacionarni.ov2
+src: FR-Radary_stacionarni.ov2
+src: SK-Radary_stacionarni.ov2
+cat: Taxi.ov2
+src: CZ-Taxi_Praha.ov2
+cat: Hasici.ov2
+src: Fire_Brigade.ov2
+cat: Vystaviste.ov2
+src: Exhibition Center.ov2
+src: CZ-Vystaviste.ov2
+src: CZ-Galerie.ov2
+cat: Posta.ov2
+src: CZ-Posta_ceska.ov2
+src: CZ-Posta_DHL.ov2
+src: CZ-Posta_PPL.ov2
+src: Post Office.ov2
+cat: Letiste.ov2
+src: CZ-Letiste.ov2
+src: Airport.ov2
+cat: Konferencni_centrum.ov2
+src: Convention Centre.ov2
+cat: Zabavni_park.ov2
+src: Amusement Park.ov2
+src: Attractions.ov2
+cat: Vinarny.ov2
+src: Winery.ov2
+src: CZ-Vinoteky.ov2
+cat: Cukrarny.ov2
+src: CZ-Cukrarny.ov2
+cat: Mista_bohosluzeb.ov2
+src: Place of Worship.ov2
+cat: WiFi.ov2
+src: CZ-T-Mobile_HotSpot.ov2
+src: CZ-TelefonicaO2_WiFi_spot.ov2
+src: CZ-WIFI_free.ov2
+src: FR-WiFi.ov2
+cat: Pujcovna_aut.ov2
+src: Rent Car Facility.ov2
+cat: Nocni_zivot.ov2
+src: Nightlife.ov2
+src: CZ-Erotic_City.ov2
+src: Strip_Bars.ov2
+9374=Zubar.ov2
+7317=Muzeum.ov2
+7360=Kempy.ov2
+7342=Kina.ov2
+7338=Aquaparky_bazeny.ov2
+7339=Mista_bohosluzeb.ov2
+9362=Park_a_rekreace.ov2
+7373=Nakupni_centra.ov2
+7349=Vinarny.ov2
+9372=Undef9372.ov2
+7313=Parkovaci_garaz.ov2
+7312=Pujcovna_aut.ov2
+7380=Zeleznicni_stanice.ov2
+9375=Veterinar.ov2
+9910=Prodejce_automobilu.ov2
+7385=Vystaviste.ov2
+7326=Lekarny.ov2
+9363=Soudni_sin.ov2
+7321=Nemocnice.ov2
+7383=Letiste.ov2
+7369=Parkoviste.ov2
+9361=Obchody.ov2
+7365=Ambasada.ov2
+9911=Golf.ov2
+7311=Cerpaci_stanice.ov2
+7377=Vysoke_skoly.ov2
+7395=Odpocivadla.ov2
+9365=Opera.ov2
+9379=Nocni_zivot.ov2
+9369=Tenis.ov2
+9380=Marina.ov2
+9357=Plaze.ov2
+9906=Kostely.ov2
+9359=Undef9359.ov2
+9377=Konferencni_centrum.ov2
+7320=Sportovni_centra.ov2
+9371=Vodni_sporty.ov2
+9902=Zabavni_park.ov2
+9913=Knihovny.ov2
+7376=Turisticke_atrakce.ov2
+9930=Parkoviste_pujcovny.ov2
+7341=Casino.ov2
+7337=Panorama.ov2
+7367=Statni_instituce.ov2
+7318=Divadlo.ov2
+9360=Bruslarsky_stadion.ov2
+7314=Hotel.ov2
+7310=Autoservis.ov2
+9352=Firmy.ov2
+7366=Hranicni_Prechody.ov2
+9364=Hory_a_pohori.ov2
+7315=Restaurace.ov2
+7319=Kulturni_centra.ov2
+9935=Horsky_prusmyk.ov2
+7397=Bankomaty.ov2
+7316=Turisticke_informace.ov2
+7324=Posta.ov2
+7352=Privozy_pristavy.ov2
+9927=ZOO.ov2
+9373=Lekar.ov2
+7374=Stadiony.ov2
+7379=Obce.ov2
+7322=Policie.ov2
+9367=Koncertni_hala.ov2
